@@ -298,6 +298,9 @@ void Gamepad::process()
 	// clean up after yourself. nobody likes bad inputs.
 	state.dpad = runSOCDCleaner(resolveSOCDMode(options), state.dpad);
 
+	// after cleanup, round the corners
+	state.dpad = roundCorners(state.dpad);
+
 	// since analog modes only care about the dpad mode inputs, set the dpad state to digital only dpad values
 	switch (activeDpadMode)
 	{

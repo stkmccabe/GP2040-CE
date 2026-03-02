@@ -180,3 +180,11 @@ uint8_t filterToFourWayMode(uint8_t dpad);
  * @return uint8_t The clean D-pad value.
  */
 uint8_t runSOCDCleaner(SOCDMode mode, uint8_t dpad);
+
+/**
+ * @brief Round the corners of the dpad input to make strict quarter-circles easier.
+ *
+ * @param dpad The GamepadState.dpad value.
+ * @return uint8_t The new dpad value with rounded corners.
+ */
+uint8_t roundCorners(uint8_t dpad);

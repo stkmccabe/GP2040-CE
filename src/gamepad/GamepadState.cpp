@@ -166,3 +166,34 @@ uint8_t runSOCDCleaner(SOCDMode mode, uint8_t dpad)
 
 	return newDpad;
 }
+
+/**
+ * @brief Round the corners of the dpad input to make strict quarter-circles easier.
+ *
+ * @param dpad The GamepadState.dpad value.
+ * @return uint8_t The new dpad value with rounded corners.
+ */
+uint8_t roundCorners(uint8_t dpad) {
+	static uint32_t lastDownMs = 0;
+	static uint32_t lastInjectMs = 0;
+
+	uint32_t nowMs = getMillis();
+	if (dpad == GAMEPAD_MASK_DOWN) {
+		lastDownMs = nowMs;
+	} else if (dpad != 0) {
+		if (dpad & (GAMEPAD_MASK_LEFT | GAMEPAD_MASK_RIGHT)) {
+			// on any side input (including diagonals),
+			// if pure down was input less than 3 frames ago,
+			// inject a down input for 1 frame
+			if (nowMs - lastDownMs < 50) {
+				lastInjectMs = nowMs;
+			}
+			if (nowMs - lastInjectMs < 17) {
+				dpad |= GAMEPAD_MASK_DOWN;
+			}
+		}
+		lastDownMs = 0;
+	}
+
+	return dpad;
+}
